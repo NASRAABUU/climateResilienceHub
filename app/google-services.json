@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "278061280259",
+    "firebase_url": "https://climateresiliancehub-4f668-default-rtdb.firebaseio.com",
+    "project_id": "climateresiliancehub-4f668",
+    "storage_bucket": "climateresiliancehub-4f668.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278061280259:android:347f6535e35c741dc2b236",
+        "android_client_info": {
+          "package_name": "com.example.climateresiliencehub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY-n1FEfSQo_Oeiqntw0Q8h1RiY9Mqync"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278061280259:android:a9afa4d6facd51c1c2b236",
+        "android_client_info": {
+          "package_name": "com.example.climateresilliancehub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY-n1FEfSQo_Oeiqntw0Q8h1RiY9Mqync"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
