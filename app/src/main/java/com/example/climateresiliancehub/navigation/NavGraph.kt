@@ -12,89 +12,59 @@ import com.example.climateresiliencehub.viewmodel.AuthViewModel
 import com.example.climateresiliencehub.viewmodel.ReportViewModel
 
 @Composable
-fun AppNavHost(
-    modifier: Modifier = Modifier
-) {
+fun AppNavHost(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val authViewModel: AuthViewModel = viewModel()
     val reportViewModel: ReportViewModel = viewModel()
 
-    NavHost(
-        navController = navController,
-        startDestination = Routes.SPLASH,
-        modifier = modifier
-    ) {
+    NavHost(navController = navController, startDestination = Routes.SPLASH, modifier = modifier) {
 
-        // 🔹 Splash Screen
+        // Splash
         composable(Routes.SPLASH) {
             SplashScreen(
                 viewModel = authViewModel,
-                onNavigateToLogin = {
-                    navController.navigate(Routes.REGISTER) {
-                        popUpTo(Routes.SPLASH) { inclusive = true }
-                    }
-                },
-                onNavigateToDashboard = {
-                    navController.navigate(Routes.DASHBOARD) {
-                        popUpTo(Routes.SPLASH) { inclusive = true }
-                    }
-                }
+                onNavigateToLogin = { navController.navigate(Routes.LOGIN) },
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
             )
         }
 
-        // 🔹 Register Screen
+        // Register
         composable(Routes.REGISTER) {
             RegisterScreen(
                 viewModel = authViewModel,
-                onRegisterSuccess = {
-                    navController.navigate(Routes.DASHBOARD) {
-                        popUpTo(Routes.REGISTER) { inclusive = true }
-                    }
-                },
+                onRegisterSuccess = { navController.navigate(Routes.DASHBOARD) { popUpTo(Routes.REGISTER) { inclusive = true } } },
                 onLoginClick = { navController.navigate(Routes.LOGIN) }
             )
         }
 
-        // 🔹 Login Screen
+        // Login
         composable(Routes.LOGIN) {
             LoginScreen(
                 viewModel = authViewModel,
-                onLoginSuccess = {
-                    navController.navigate(Routes.DASHBOARD) {
-                        popUpTo(Routes.LOGIN) { inclusive = true }
-                    }
-                },
+                onLoginSuccess = { navController.navigate(Routes.DASHBOARD) { popUpTo(Routes.LOGIN) { inclusive = true } } },
                 onRegisterClick = { navController.navigate(Routes.REGISTER) }
             )
         }
 
-        // 🔹 Dashboard Screen
+        // Dashboard
         composable(Routes.DASHBOARD) {
             DashboardScreen(
                 authViewModel = authViewModel,
                 reportViewModel = reportViewModel,
                 onAddReport = { navController.navigate(Routes.ADD_REPORT) },
                 onEditReport = { report ->
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("report", report)
+                    navController.currentBackStackEntry?.savedStateHandle?.set("report", report)
                     navController.navigate(Routes.UPDATE_REPORT)
                 },
                 onViewReport = { report ->
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("report", report)
+                    navController.currentBackStackEntry?.savedStateHandle?.set("report", report)
                     navController.navigate(Routes.VIEW_REPORTS)
                 },
-                onLogout = {
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.DASHBOARD) { inclusive = true }
-                    }
-                }
+                onLogout = { navController.navigate(Routes.LOGIN) { popUpTo(Routes.DASHBOARD) { inclusive = true } } }
             )
         }
 
-        // 🔹 Add Report Screen
+        // Add Report
         composable(Routes.ADD_REPORT) {
             AddReportScreen(
                 viewModel = reportViewModel,
@@ -102,12 +72,9 @@ fun AppNavHost(
             )
         }
 
-        // 🔹 Update Report Screen
+        // Update Report
         composable(Routes.UPDATE_REPORT) {
-            val report = navController.previousBackStackEntry
-                ?.savedStateHandle
-                ?.get<Report>("report")
-
+            val report = navController.previousBackStackEntry?.savedStateHandle?.get<Report>("report")
             report?.let {
                 UpdateReportScreen(
                     report = it,
@@ -117,20 +84,21 @@ fun AppNavHost(
             }
         }
 
-        // 🔹 View Reports Screen
+        // View Reports
         composable(Routes.VIEW_REPORTS) {
-            ViewReportsScreen(
-                viewModel = reportViewModel,
-                onEdit = { reportToEdit ->
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("report", reportToEdit)
-                    navController.navigate(Routes.UPDATE_REPORT)
-                },
-                onView = { reportToView ->
-                    // Optional: navigate to detailed view if needed
-                }
-            )
+            val report = navController.previousBackStackEntry?.savedStateHandle?.get<Report>("report")
+            report?.let {
+                ViewReportsScreen(
+                    viewModel = reportViewModel,
+                    onEdit = { reportToEdit ->
+                        navController.currentBackStackEntry?.savedStateHandle?.set("report", reportToEdit)
+                        navController.navigate(Routes.UPDATE_REPORT)
+                    },
+                    onView = { reportToView ->
+                        // Optional: you can navigate to a detail screen
+                    }
+                )
+            }
         }
     }
 }

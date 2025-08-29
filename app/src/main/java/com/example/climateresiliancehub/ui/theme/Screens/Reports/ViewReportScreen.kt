@@ -64,7 +64,7 @@ fun ViewReportsScreen(
 
                             Spacer(Modifier.height(8.dp))
                             Row {
-                                Button(onClick = { onView(report) }) { Text("View") }
+                                Button(onClick = { onView(report) }) { Text("Delete") }
                                 Spacer(Modifier.width(8.dp))
                                 Button(onClick = { onEdit(report) }) { Text("Update") }
                                 Spacer(Modifier.width(8.dp))

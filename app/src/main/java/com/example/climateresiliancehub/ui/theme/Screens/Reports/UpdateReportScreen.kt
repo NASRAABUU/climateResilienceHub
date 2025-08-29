@@ -12,17 +12,13 @@ import com.example.climateresiliencehub.viewmodel.ReportViewModel
 @Composable
 fun UpdateReportScreen(
     report: Report,
-    viewModel: ReportViewModel = viewModel(),
+    viewModel: ReportViewModel,
     onUpdated: () -> Unit
 ) {
     var title by remember { mutableStateOf(report.title) }
     var description by remember { mutableStateOf(report.description) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
+    Column(modifier = Modifier.padding(16.dp)) {
         TextField(
             value = title,
             onValueChange = { title = it },
@@ -30,7 +26,6 @@ fun UpdateReportScreen(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(8.dp))
-
         TextField(
             value = description,
             onValueChange = { description = it },
@@ -38,15 +33,13 @@ fun UpdateReportScreen(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(16.dp))
-
         Button(
             onClick = {
                 val updatedReport = report.copy(title = title, description = description)
                 viewModel.updateReport(updatedReport)
                 onUpdated()
             },
-            enabled = title.isNotBlank() && description.isNotBlank(),
-            modifier = Modifier.fillMaxWidth()
+            enabled = title.isNotBlank() && description.isNotBlank()
         ) {
             Text("Update Report")
         }
