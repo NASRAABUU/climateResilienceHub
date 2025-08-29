@@ -69,8 +69,8 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
 
     // Coil (image loading)
-    implementation("io.coil-kt:coil-compose:2.5.0")
 
+    implementation("io.coil-kt:coil-compose:2.4.0")
     // Firebase (Auth + Firestore + Storage)
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-auth-ktx")

@@ -18,21 +18,31 @@ fun ViewReportsScreen(
     onEdit: (Report) -> Unit,
     onView: (Report) -> Unit
 ) {
-    val reports by viewModel.reports.collectAsState()
-    val loading by viewModel.loading.collectAsState()
+    val reports by viewModel.reports.collectAsState(initial = emptyList())
+    val loading by viewModel.loading.collectAsState(initial = false)
 
     var showDeleteDialog by remember { mutableStateOf(false) }
     var reportToDelete by remember { mutableStateOf<Report?>(null) }
-    var updateMessage by remember { mutableStateOf("") }
 
-    LaunchedEffect(Unit) {
-        viewModel.loadReports()
-    }
+    // Load reports only once
+    LaunchedEffect(Unit) { viewModel.loadReports() }
 
-    Column(Modifier.fillMaxSize().padding(8.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
 
         if (loading) {
-            CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) { CircularProgressIndicator() }
+        } else if (reports.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) { Text("No reports found") }
         } else {
             LazyColumn {
                 items(reports) { report ->
@@ -45,28 +55,23 @@ fun ViewReportsScreen(
                         Column(Modifier.padding(16.dp)) {
                             Text(report.title, style = MaterialTheme.typography.titleLarge)
                             Spacer(Modifier.height(4.dp))
-                            Text(report.description)
-                            Spacer(Modifier.height(4.dp))
-                            Text(report.imageUrl)
+                            Text(report.description, style = MaterialTheme.typography.bodyMedium)
+
+                            if (!report.imageUrl.isNullOrEmpty()) {
+                                Spacer(Modifier.height(8.dp))
+                                AsyncImageFromUrl(report.imageUrl)
+                            }
 
                             Spacer(Modifier.height(8.dp))
                             Row {
                                 Button(onClick = { onView(report) }) { Text("View") }
                                 Spacer(Modifier.width(8.dp))
-                                Button(onClick = {
-                                    onEdit(report)
-                                    updateMessage = "Updated Successfully!"
-                                }) { Text("Update") }
+                                Button(onClick = { onEdit(report) }) { Text("Update") }
                                 Spacer(Modifier.width(8.dp))
                                 Button(onClick = {
                                     reportToDelete = report
                                     showDeleteDialog = true
                                 }) { Text("Delete") }
-                            }
-
-                            if (updateMessage.isNotEmpty()) {
-                                Spacer(Modifier.height(4.dp))
-                                Text(updateMessage, color = MaterialTheme.colorScheme.primary)
                             }
                         }
                     }
@@ -74,24 +79,20 @@ fun ViewReportsScreen(
             }
         }
 
-        // Delete Confirmation Dialog
+        // Delete dialog
         if (showDeleteDialog && reportToDelete != null) {
             AlertDialog(
                 onDismissRequest = { showDeleteDialog = false },
                 title = { Text("Confirm Delete") },
-                text = { Text("Are you sure you want to delete '${reportToDelete?.title}'?") },
+                text = { Text("Delete '${reportToDelete?.title}'?") },
                 confirmButton = {
                     TextButton(onClick = {
                         reportToDelete?.let { viewModel.deleteReport(it.id) }
                         showDeleteDialog = false
-                    }) {
-                        Text("Yes")
-                    }
+                    }) { Text("Yes") }
                 },
                 dismissButton = {
-                    TextButton(onClick = { showDeleteDialog = false }) {
-                        Text("No")
-                    }
+                    TextButton(onClick = { showDeleteDialog = false }) { Text("No") }
                 }
             )
         }

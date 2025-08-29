@@ -30,7 +30,7 @@ fun AppNavHost(
             SplashScreen(
                 viewModel = authViewModel,
                 onNavigateToLogin = {
-                    navController.navigate(Routes.LOGIN) {
+                    navController.navigate(Routes.REGISTER) {
                         popUpTo(Routes.SPLASH) { inclusive = true }
                     }
                 },

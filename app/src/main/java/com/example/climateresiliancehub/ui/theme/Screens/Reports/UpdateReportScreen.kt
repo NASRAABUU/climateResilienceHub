@@ -18,18 +18,37 @@ fun UpdateReportScreen(
     var title by remember { mutableStateOf(report.title) }
     var description by remember { mutableStateOf(report.description) }
 
-    Column(Modifier.padding(16.dp)) {
-        TextField(value = title, onValueChange = { title = it }, label = { Text("Title") })
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        TextField(
+            value = title,
+            onValueChange = { title = it },
+            label = { Text("Title") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(Modifier.height(8.dp))
-        TextField(value = description, onValueChange = { description = it }, label = { Text("Description") })
+
+        TextField(
+            value = description,
+            onValueChange = { description = it },
+            label = { Text("Description") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(Modifier.height(16.dp))
 
-        Button(onClick = {
-            val updated = report.copy(title = title, description = description)
-            viewModel.updateReport(updated)
-            onUpdated()
-        }) {
-            Text("Save Changes")
+        Button(
+            onClick = {
+                val updatedReport = report.copy(title = title, description = description)
+                viewModel.updateReport(updatedReport)
+                onUpdated()
+            },
+            enabled = title.isNotBlank() && description.isNotBlank(),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Update Report")
         }
     }
 }
